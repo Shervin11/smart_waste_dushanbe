@@ -265,12 +265,10 @@ const prismaClientSingleton = () => {
     return createMockPrismaClient() as unknown as PrismaClient;
   }
 
-  // SQLite (Local Dev)
+  // SQLite (Local Dev) — use URL-based constructor matching seed.ts
   const { PrismaBetterSqlite3 } = require('@prisma/adapter-better-sqlite3');
-  const BetterSqlite3 = require('better-sqlite3');
-  const dbPath = process.env.DATABASE_URL?.replace('file:', '') || 'prisma/dev.db';
-  const db = new BetterSqlite3(dbPath);
-  const adapter = new PrismaBetterSqlite3(db);
+  const dbUrl = process.env.DATABASE_URL || 'file:./prisma/dev.db';
+  const adapter = new PrismaBetterSqlite3({ url: dbUrl });
   return new PrismaClient({ adapter });
 };
 

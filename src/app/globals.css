@@ -1,64 +1,133 @@
 @import "tailwindcss";
 
+/* Force dark: prefix to use .dark class, not prefers-color-scheme */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────
+   Theme: Light (default)
+──────────────────────────────────────── */
 :root {
-  --background: #f8fafc; /* Slate 50 */
-  --foreground: #0f172a; /* Slate 900 */
+  --background: #f8fafc;
+  --foreground: #0f172a;
 }
 
-/* Class-based Dark Mode configuration */
-.dark {
-  --background: #030712; /* Gray 950 / Obsidian */
-  --foreground: #f8fafc; /* Slate 50 */
+/* ─────────────────────────────────────────
+   Theme: Dark (when html has .dark class)
+──────────────────────────────────────── */
+html.dark {
+  --background: #030712;
+  --foreground: #f8fafc;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  --font-mono: var(--font-geist-mono);
+/* ─────────────────────────────────────────
+   Base Styles
+──────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth Scrolling */
-html {
-  scroll-behavior: smooth;
+/* ─────────────────────────────────────────
+   bg-background / text-foreground utilities
+──────────────────────────────────────── */
+.bg-background {
+  background-color: var(--background);
+}
+.text-foreground {
+  color: var(--foreground);
 }
 
-/* Custom laser scan animation for the AI camera simulator */
-@keyframes scan {
-  0% {
-    top: 5%;
-  }
-  50% {
-    top: 95%;
-  }
-  100% {
-    top: 5%;
-  }
+/* ─────────────────────────────────────────
+   Animations
+──────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Each animation class starts at opacity:0 in CSS so there's no flash */
+.animate-fade-in-up   { animation: fadeInUp 0.5s ease-out forwards; }
+.animate-fade-in-up-1 { opacity: 0; animation: fadeInUp 0.5s 0.05s ease-out forwards; }
+.animate-fade-in-up-2 { opacity: 0; animation: fadeInUp 0.5s 0.15s ease-out forwards; }
+.animate-fade-in-up-3 { opacity: 0; animation: fadeInUp 0.5s 0.25s ease-out forwards; }
+.animate-fade-in-up-4 { opacity: 0; animation: fadeInUp 0.5s 0.35s ease-out forwards; }
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+.animate-float { animation: floatY 5s ease-in-out infinite; }
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
+}
+.animate-glow { animation: glowPulse 2.5s ease-in-out infinite; }
+
+@keyframes blinkDot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+.animate-blink { animation: blinkDot 1.4s ease-in-out infinite; }
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes laserScan {
+  0%   { top: 5%; }
+  50%  { top: 95%; }
+  100% { top: 5%; }
+}
 .animate-laser-scan {
-  animation: scan 2s infinite linear;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #10b981, transparent);
+  box-shadow: 0 0 12px #10b981;
+  animation: laserScan 2s infinite linear;
 }
 
-/* Glassmorphism custom classes */
-.glass-panel {
-  background-color: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+/* ─────────────────────────────────────────
+   Auth grid background (dark-only)
+──────────────────────────────────────── */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
-.dark .glass-panel {
-  background-color: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(51, 65, 85, 0.4);
+/* ─────────────────────────────────────────
+   Input focus glow
+──────────────────────────────────────── */
+.input-glow:focus {
+  outline: none;
+  border-color: rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
 }
+
+/* ─────────────────────────────────────────
+   Custom scrollbar
+──────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(100,116,139,0.3); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(100,116,139,0.5); }
