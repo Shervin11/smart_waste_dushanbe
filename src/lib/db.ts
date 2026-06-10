@@ -1,7 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
 
 const prismaClientSingleton = () => {
   const isPostgres =
@@ -9,15 +6,20 @@ const prismaClientSingleton = () => {
     process.env.DATABASE_URL?.startsWith('postgresql://');
 
   if (isPostgres) {
+    const { PrismaPg } = require('@prisma/adapter-pg');
+    const { Pool } = require('pg');
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
     const adapter = new PrismaPg(pool);
     return new PrismaClient({ adapter });
   }
 
-  // SQLite (Local Dev)
-  const adapter = new PrismaBetterSqlite3({
-    url: process.env.DATABASE_URL || 'file:./dev.db',
-  });
+  // SQLite (Local Dev & Vercel fallback)
+  const { PrismaBetterSqlite3 } = require('@prisma/adapter-better-sqlite3');
+  const BetterSqlite3 = require('better-sqlite3');
+  // Resolve path to prisma/dev.db which is committed to the repo
+  const dbPath = process.env.DATABASE_URL?.replace('file:', '') || 'prisma/dev.db';
+  const db = new BetterSqlite3(dbPath);
+  const adapter = new PrismaBetterSqlite3(db);
   return new PrismaClient({ adapter });
 };
 
