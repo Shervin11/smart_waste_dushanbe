@@ -4,22 +4,27 @@ const createMockPrismaClient = () => {
   console.log('Using in-memory mock database fallback for Vercel serverless SQLite.');
 
   const mockContainers = [
-    { id: 'DUS-101', address: 'ул. Махсум, 12', latitude: 38.5612, longitude: 68.7345, fillLevel: 45, overflow: false, district: 'Sino', lastUpdated: new Date() },
-    { id: 'DUS-102', address: 'ул. Гафурова, 45', latitude: 38.5732, longitude: 68.7512, fillLevel: 95, overflow: true, district: 'Sino', lastUpdated: new Date() },
-    { id: 'DUS-103', address: 'ул. Айни, 84', latitude: 38.5521, longitude: 68.8012, fillLevel: 20, overflow: false, district: 'Shohmansur', lastUpdated: new Date() },
-    { id: 'DUS-104', address: 'ул. Карамова, 12', latitude: 38.5889, longitude: 68.7845, fillLevel: 85, overflow: false, district: 'Ismoili Somoni', lastUpdated: new Date() },
-    { id: 'DUS-105', address: 'ул. Джами, 8', latitude: 38.5312, longitude: 68.7612, fillLevel: 60, overflow: false, district: 'Firdavsi', lastUpdated: new Date() }
+    { id: 'DUS-101', address: 'ул. Нусратулло Махсум, 45', latitude: 38.564, longitude: 68.752, fillLevel: 45, overflow: false, district: 'Sino', lastUpdated: new Date() },
+    { id: 'DUS-102', address: 'ул. Бободжон Гафуров, 12', latitude: 38.571, longitude: 68.765, fillLevel: 85, overflow: true, district: 'Sino', lastUpdated: new Date() },
+    { id: 'DUS-103', address: 'пр. Рудаки, 84 (возле театра)', latitude: 38.586, longitude: 68.786, fillLevel: 20, overflow: false, district: 'Ismoili Somoni', lastUpdated: new Date() },
+    { id: 'DUS-104', address: 'ул. Карамова, 15 (парк Хайям)', latitude: 38.591, longitude: 68.775, fillLevel: 95, overflow: true, district: 'Ismoili Somoni', lastUpdated: new Date() },
+    { id: 'DUS-105', address: 'ул. Айни, 34', latitude: 38.552, longitude: 68.805, fillLevel: 60, overflow: false, district: 'Shohmansur', lastUpdated: new Date() },
+    { id: 'DUS-106', address: 'ул. Дониш, 9 (Аэропорт)', latitude: 38.545, longitude: 68.815, fillLevel: 10, overflow: false, district: 'Shohmansur', lastUpdated: new Date() },
+    { id: 'DUS-107', address: 'ул. Неъмат Карабаев, 65', latitude: 38.525, longitude: 68.778, fillLevel: 75, overflow: false, district: 'Firdavsi', lastUpdated: new Date() },
+    { id: 'DUS-108', address: 'ул. Джами, 3', latitude: 38.515, longitude: 68.790, fillLevel: 92, overflow: true, district: 'Firdavsi', lastUpdated: new Date() }
   ];
 
   const mockUsers = [
-    { id: 'user-admin', username: 'admin', password: '123', name: 'Рустам Исмаилов', role: 'ADMIN' },
-    { id: 'user-operator', username: 'operator', password: '123', name: 'Ситора Саидова', role: 'OPERATOR' },
-    { id: 'user-driver-1', username: 'driver1', password: '123', name: 'Давлат Рахимов', role: 'DRIVER' },
-    { id: 'user-driver-2', username: 'driver2', password: '123', name: 'Сомон Каримов', role: 'DRIVER' }
+    { id: 'user-admin', username: 'admin', password: 'admin123', name: 'Администратор Системы', role: 'ADMIN' },
+    { id: 'user-operator', username: 'operator', password: 'operator123', name: 'Алишер (Оператор)', role: 'OPERATOR' },
+    { id: 'user-driver-1', username: 'driver1', password: 'driver123', name: 'Сомон (Водитель)', role: 'DRIVER' },
+    { id: 'user-driver-2', username: 'driver2', password: 'driver123', name: 'Джамшед (Водитель)', role: 'DRIVER' }
   ];
 
   const mockTasks = [
-    { id: 'task-1', containerId: 'DUS-102', status: 'PENDING', priority: 'HIGH', createdAt: new Date(), completedAt: null, container: mockContainers[1], driverId: null, driver: null }
+    { id: 'task-1', containerId: 'DUS-102', status: 'IN_PROGRESS', priority: 'HIGH', createdAt: new Date(), completedAt: null, container: mockContainers[1], driverId: 'user-driver-1', driver: mockUsers[2] },
+    { id: 'task-2', containerId: 'DUS-104', status: 'PENDING', priority: 'HIGH', createdAt: new Date(), completedAt: null, container: mockContainers[3], driverId: null, driver: null },
+    { id: 'task-3', containerId: 'DUS-108', status: 'PENDING', priority: 'HIGH', createdAt: new Date(), completedAt: null, container: mockContainers[7], driverId: 'user-driver-2', driver: mockUsers[3] }
   ];
 
   return {
