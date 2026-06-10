@@ -25,16 +25,16 @@ export default async function DashboardPage() {
 
   const serializeContainers = containers.map((c: Container & { tasks: Task[] }) => ({
     ...c,
-    lastUpdated: c.lastUpdated.toISOString(),
+    lastUpdated: c.lastUpdated?.toISOString() || new Date().toISOString(),
   }));
 
   const serializeTasks = tasks.map((t: Task & { container: Container; driver: User | null }) => ({
     ...t,
-    createdAt: t.createdAt.toISOString(),
+    createdAt: t.createdAt?.toISOString() || new Date().toISOString(),
     completedAt: t.completedAt ? t.completedAt.toISOString() : null,
     container: {
       ...t.container,
-      lastUpdated: t.container.lastUpdated.toISOString(),
+      lastUpdated: t.container.lastUpdated?.toISOString() || new Date().toISOString(),
     },
     driver: t.driver
       ? {

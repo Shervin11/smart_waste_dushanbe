@@ -18,7 +18,7 @@ export default async function MapPage() {
 
   const serializeContainers = containers.map((c: Container & { tasks: Task[] }) => ({
     ...c,
-    lastUpdated: c.lastUpdated.toISOString(),
+    lastUpdated: c.lastUpdated?.toISOString() || new Date().toISOString(),
   }));
 
   return (

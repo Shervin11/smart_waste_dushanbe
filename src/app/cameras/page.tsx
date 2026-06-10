@@ -12,7 +12,7 @@ export default async function CamerasPage() {
 
   const serializeContainers = containers.map((c: Container) => ({
     ...c,
-    lastUpdated: c.lastUpdated.toISOString(),
+    lastUpdated: c.lastUpdated?.toISOString() || new Date().toISOString(),
   }));
 
   const hasApiKey = !!process.env.GEMINI_API_KEY;

@@ -12,7 +12,7 @@ export default async function ContainersPage() {
 
   const serializeContainers = containers.map((c: Container) => ({
     ...c,
-    lastUpdated: c.lastUpdated.toISOString(),
+    lastUpdated: c.lastUpdated?.toISOString() || new Date().toISOString(),
   }));
 
   return (

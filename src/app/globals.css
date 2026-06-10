@@ -1,19 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc; /* Slate 50 */
-  --foreground: #0f172a; /* Slate 900 */
+  --background: #f1f5f9; /* Slate 100 - Light */
+  --foreground: #1e293b; /* Slate 800 - Dark Text */
+  --primary: #10b981; /* Emerald Green */
+  --primary-dark: #059669; /* Emerald Dark */
+  --secondary: #8b5cf6; /* Violet */
+  --secondary-dark: #7c3aed; /* Violet Dark */
+  --danger: #ef4444; /* Red */
+  --success: #06b6d4; /* Cyan */
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-300: #cbd5e1;
+  --neutral-400: #94a3b8;
+  --neutral-500: #64748b;
+  --neutral-600: #475569;
+  --neutral-700: #334155;
+  --neutral-800: #1e293b;
+  --neutral-900: #0f172a;
 }
 
 /* Class-based Dark Mode configuration */
 .dark {
-  --background: #030712; /* Gray 950 / Obsidian */
-  --foreground: #f8fafc; /* Slate 50 */
+  --background: #0f172a; /* Slate 900 - Dark */
+  --foreground: #f1f5f9; /* Slate 100 - Light Text */
+  --primary: #10b981; /* Emerald Green (consistent) */
+  --primary-dark: #059669; /* Emerald Dark */
+  --secondary: #a78bfa; /* Violet Light */
+  --secondary-dark: #8b5cf6; /* Violet */
+  --danger: #ef4444; /* Red (consistent) */
+  --success: #06b6d4; /* Cyan (consistent) */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-slate-50: var(--neutral-50);
+  --color-slate-100: var(--neutral-100);
+  --color-slate-200: var(--neutral-200);
+  --color-slate-300: var(--neutral-300);
+  --color-slate-400: var(--neutral-400);
+  --color-slate-500: var(--neutral-500);
+  --color-slate-600: var(--neutral-600);
+  --color-slate-700: var(--neutral-700);
+  --color-slate-800: var(--neutral-800);
+  --color-slate-900: var(--neutral-900);
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
@@ -24,6 +60,152 @@ body {
   font-family: var(--font-sans);
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   min-height: 100vh;
+}
+
+/* Better typography hierarchy */
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Enhanced buttons styling */
+button {
+  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Primary button */
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Secondary button */
+.btn-secondary {
+  background-color: var(--secondary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-dark);
+}
+
+/* Danger button */
+.btn-danger {
+  background-color: var(--danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+/* Success button */
+.btn-success {
+  background-color: var(--success);
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #0891b2;
+}
+
+/* Input styling */
+input,
+textarea,
+select {
+  border: 1px solid var(--neutral-300);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--neutral-50);
+  color: var(--foreground);
+  transition: all 0.2s ease;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: var(--neutral-800);
+  border-color: var(--neutral-700);
+  color: var(--foreground);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Card/Panel styling */
+.card,
+.panel {
+  background-color: var(--neutral-50);
+  border: 1px solid var(--neutral-200);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.dark .card,
+.dark .panel {
+  background-color: var(--neutral-800);
+  border-color: var(--neutral-700);
+}
+
+.card:hover,
+.panel:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary);
+}
+
+.dark .card:hover,
+.dark .panel:hover {
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
+  border-color: var(--primary);
 }
 
 /* Smooth Scrolling */
@@ -61,4 +243,50 @@ html {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(51, 65, 85, 0.4);
+}
+
+/* Badge styling */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.badge-primary {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--primary);
+}
+
+.dark .badge-primary {
+  background-color: rgba(16, 185, 129, 0.2);
+}
+
+.badge-secondary {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--secondary);
+}
+
+.dark .badge-secondary {
+  background-color: rgba(139, 92, 246, 0.2);
+}
+
+.badge-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.dark .badge-danger {
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+.badge-success {
+  background-color: rgba(6, 182, 212, 0.1);
+  color: var(--success);
+}
+
+.dark .badge-success {
+  background-color: rgba(6, 182, 212, 0.2);
 }
