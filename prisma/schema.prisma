@@ -17,7 +17,7 @@ model User {
   username String @unique
   password String
   name     String
-  role     String // ADMIN, OPERATOR, DRIVER
+  role     String // ADMIN, OPERATOR, DRIVER, CLIENT
   tasks    Task[]
 }
 
@@ -44,3 +44,25 @@ model Task {
   createdAt   DateTime  @default(now())
   completedAt DateTime?
 }
+
+model Feedback {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?
+  message   String
+  reply     String?  // reply from operator
+  status    String   @default("PENDING") // PENDING, REPLIED
+  createdAt DateTime @default(now())
+}
+
+model SuggestedLocation {
+  id          String   @id @default(uuid())
+  address     String
+  description String
+  photo       String   // base64 image data string
+  latitude    Float
+  longitude   Float
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt   DateTime @default(now())
+}
+

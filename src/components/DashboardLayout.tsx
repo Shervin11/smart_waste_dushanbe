@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   Camera,
+  MessageSquare,
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -36,7 +37,7 @@ interface UserSession {
   id: string;
   name: string;
   username: string;
-  role: 'ADMIN' | 'OPERATOR' | 'DRIVER';
+  role: 'ADMIN' | 'OPERATOR' | 'DRIVER' | 'CLIENT';
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
@@ -51,8 +52,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       const user = await getCurrentUser();
       if (!user) {
         router.push('/login');
+      } else if (user.role === 'CLIENT') {
+        router.push('/client');
       } else {
-        setCurrentUser(user);
+        setCurrentUser(user as any);
       }
       setLoading(false);
     }
@@ -95,7 +98,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       icon: Navigation,
       roles: ['ADMIN', 'OPERATOR', 'DRIVER'],
     },
+    {
+      name: 'Обращения граждан',
+      href: '/feedback',
+      icon: MessageSquare,
+      roles: ['ADMIN', 'OPERATOR'],
+    },
   ];
+
 
   if (loading) {
     return (

@@ -60,9 +60,56 @@ export async function getCurrentUser() {
       id: string;
       name: string;
       username: string;
-      role: 'ADMIN' | 'OPERATOR' | 'DRIVER';
+      role: 'ADMIN' | 'OPERATOR' | 'DRIVER' | 'CLIENT';
     };
   } catch {
     return null;
   }
 }
+
+export async function registerClient(username: string, password: string, name: string) {
+  try {
+    const existing = await prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (existing) {
+      return { error: 'Пользователь с таким именем уже существует' };
+    }
+
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password,
+        name,
+        role: 'CLIENT',
+      },
+    });
+
+    const cookieStore = await cookies();
+    cookieStore.set(
+      'session_user',
+      JSON.stringify({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        role: user.role,
+      }),
+      {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+        path: '/',
+      }
+    );
+
+    return {
+      success: true,
+      user: { id: user.id, name: user.name, role: user.role },
+    };
+  } catch (error) {
+    console.error('Registration error:', error);
+    return { error: 'Произошла ошибка при регистрации' };
+  }
+}
+

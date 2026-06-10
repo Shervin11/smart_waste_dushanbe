@@ -27,7 +27,7 @@ interface UserSession {
   id: string;
   name: string;
   username: string;
-  role: 'ADMIN' | 'OPERATOR' | 'DRIVER';
+  role: 'ADMIN' | 'OPERATOR' | 'DRIVER' | 'CLIENT';
 }
 
 interface LandingPageClientProps {

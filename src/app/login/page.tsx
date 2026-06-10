@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { login } from '@/actions/auth';
 import { Trash2, Lock, User, AlertCircle, ArrowRight } from 'lucide-react';
 
@@ -22,7 +23,11 @@ export default function LoginPage() {
       setError(res.error);
       setLoading(false);
     } else {
-      router.push('/dashboard');
+      if (res.user?.role === 'CLIENT') {
+        router.push('/client');
+      } else {
+        router.push('/dashboard');
+      }
     }
   };
 
@@ -37,7 +42,11 @@ export default function LoginPage() {
       setError(res.error);
       setLoading(false);
     } else {
-      router.push('/dashboard');
+      if (res.user?.role === 'CLIENT') {
+        router.push('/client');
+      } else {
+        router.push('/dashboard');
+      }
     }
   };
 
@@ -145,6 +154,16 @@ export default function LoginPage() {
               <span className="text-[10px] text-slate-500 mt-1">driver1</span>
             </button>
           </div>
+        </div>
+
+        {/* Register link */}
+        <div className="mt-6 text-center border-t border-slate-800/80 pt-4">
+          <p className="text-xs text-slate-500 font-medium">
+            Нет аккаунта?{' '}
+            <Link href="/register" className="text-emerald-400 hover:text-emerald-350 font-bold ml-1 hover:underline transition-all">
+              Зарегистрироваться как житель
+            </Link>
+          </p>
         </div>
       </div>
     </div>
