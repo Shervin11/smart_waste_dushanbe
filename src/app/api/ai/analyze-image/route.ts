@@ -90,7 +90,7 @@ export async function POST(request: Request) {
         fillLevel = typeof aiOutput.fill_level === 'number' ? aiOutput.fill_level : fillLevel;
         overflow = typeof aiOutput.overflow === 'boolean' ? aiOutput.overflow : overflow;
         detections = Array.isArray(aiOutput.detections) ? aiOutput.detections : detections;
-      } catch (e: any) {
+      } catch (e: unknown) {
         console.error('Gemini API call failed, falling back to mock:', e);
         isMock = true;
         // Fallback mock logic if API fails
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
     }
 
     // Update the database
-    const updatedContainer = await prisma.container.update({
+    await prisma.container.update({
       where: { id: containerId },
       data: {
         fillLevel,
@@ -151,8 +151,9 @@ export async function POST(request: Request) {
       task: createdTask,
       notice: isMock ? 'GEMINI_API_KEY is missing. Running in simulator fallback mode.' : undefined,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Analyze image error:', error);
-    return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error', details: errorMessage }, { status: 500 });
   }
 }

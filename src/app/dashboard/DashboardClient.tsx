@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   BarChart,
   Bar,
@@ -12,7 +12,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend,
 } from 'recharts';
 import {
   Trash2,
@@ -52,8 +51,11 @@ interface DashboardClientProps {
 
 export default function DashboardClient({ containers, tasks }: DashboardClientProps) {
   const [mounted, setMounted] = useState(false);
+  const mountedRef = useRef(false);
 
   useEffect(() => {
+    if (mountedRef.current) return;
+    mountedRef.current = true;
     setMounted(true);
   }, []);
 

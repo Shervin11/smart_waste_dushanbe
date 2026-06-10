@@ -1,5 +1,6 @@
 'use server';
 
+import { Feedback, SuggestedLocation } from '@prisma/client';
 import prisma from '@/lib/db';
 
 export async function submitFeedback(name: string, email: string | null, message: string) {
@@ -51,7 +52,7 @@ export async function getClientFeedbacks(name: string) {
       orderBy: { createdAt: 'desc' },
     });
     // Serialize dates for Client Components
-    return feedbacks.map(f => ({
+    return feedbacks.map((f: Feedback) => ({
       ...f,
       createdAt: f.createdAt.toISOString()
     }));
@@ -67,7 +68,7 @@ export async function getClientSuggestedLocations() {
       orderBy: { createdAt: 'desc' },
     });
     // Serialize dates
-    return locations.map(l => ({
+    return locations.map((l: SuggestedLocation) => ({
       ...l,
       createdAt: l.createdAt.toISOString()
     }));

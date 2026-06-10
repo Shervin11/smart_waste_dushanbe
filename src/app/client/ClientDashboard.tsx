@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { logout } from '@/actions/auth';
@@ -10,12 +10,12 @@ import {
   User, 
   LogOut, 
   MapPin, 
-  Camera, 
+  Camera,
   MessageSquare, 
   History, 
   Send, 
   CheckCircle2, 
-  Clock, 
+  Clock,
   Plus, 
   AlertCircle,
   Sun,
@@ -67,9 +67,13 @@ export default function ClientDashboard({
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'report' | 'message' | 'history'>('report');
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const themeInitialized = useRef(false);
 
   // Theme Controller
   useEffect(() => {
+    if (themeInitialized.current) return;
+    themeInitialized.current = true;
+    
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const initialTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     setTheme(initialTheme);

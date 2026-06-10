@@ -1,3 +1,4 @@
+import { Task, Container, User } from '@prisma/client';
 import prisma from '@/lib/db';
 import RoutesClient from './RoutesClient';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -22,7 +23,7 @@ export default async function RoutesPage() {
     },
   });
 
-  const serializeTasks = tasks.map((t) => ({
+  const serializeTasks = tasks.map((t: Task & { container: Container; driver: User | null }) => ({
     ...t,
     createdAt: t.createdAt.toISOString(),
     completedAt: t.completedAt ? t.completedAt.toISOString() : null,

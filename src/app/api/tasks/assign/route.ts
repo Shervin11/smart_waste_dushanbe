@@ -37,10 +37,11 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, task: updatedTask });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Assign task error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error.message },
+      { error: 'Internal server error', details: errorMessage },
       { status: 500 }
     );
   }

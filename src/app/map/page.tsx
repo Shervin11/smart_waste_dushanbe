@@ -1,3 +1,4 @@
+import { Container, Task } from '@prisma/client';
 import prisma from '@/lib/db';
 import MapClient from './MapClient';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -15,7 +16,7 @@ export default async function MapPage() {
     },
   });
 
-  const serializeContainers = containers.map((c) => ({
+  const serializeContainers = containers.map((c: Container & { tasks: Task[] }) => ({
     ...c,
     lastUpdated: c.lastUpdated.toISOString(),
   }));

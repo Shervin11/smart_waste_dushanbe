@@ -2,15 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
-  Camera,
   UploadCloud,
-  Play,
   Cpu,
   AlertTriangle,
   CheckCircle2,
   FileText,
-  Clock,
   Video,
   X,
 } from 'lucide-react';
@@ -24,6 +22,13 @@ interface Container {
   overflow: boolean;
   district: string;
   lastUpdated: string;
+}
+
+interface AnalysisResult {
+  overflow: boolean;
+  fill_level: number;
+  detections: Array<{ class: string; confidence: number }>;
+  [key: string]: unknown;
 }
 
 interface CamerasClientProps {
@@ -49,7 +54,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<any | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [showBoxes, setShowBoxes] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -234,10 +239,13 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                 }`}
               >
                 {/* Image acting as video stream */}
-                <img
+                <Image
                   src={cam.image}
                   alt={cam.name}
                   className="w-full h-full object-cover opacity-75 group-hover:scale-105 transition-transform duration-500"
+                  width={800}
+                  height={600}
+                  unoptimized
                 />
 
                 {/* CCTV Overlays */}
@@ -341,10 +349,13 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
             <div className="flex-1 flex flex-col gap-5">
               <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 flex items-center justify-center max-h-[350px] aspect-video">
                 {fileType === 'image' ? (
-                  <img
+                  <Image
                     src={uploadedFileUrl}
                     alt="Upload Preview"
                     className="w-full h-full object-contain"
+                    width={800}
+                    height={600}
+                    unoptimized
                   />
                 ) : (
                   <video
@@ -362,7 +373,13 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                       style={{ top: '20%', left: '25%', width: '50%', height: '60%' }}
                     >
                       <span className="absolute top-0 left-0 bg-emerald-500 text-slate-950 text-[9px] font-bold px-1.5 py-0.2 select-none">
-                        waste_container: {(analysisResult.detections?.find((d: any) => d.class === 'waste_container')?.confidence * 100 || 94).toFixed(0)}%
+                        waste_container: {(
+                          (
+                            (analysisResult.detections as Array<{ class: string; confidence: number }>)?.find(
+                              (d) => d.class === 'waste_container'
+                            )?.confidence ?? 0.94
+                          ) * 100
+                        ).toFixed(0)}%
                       </span>
                     </div>
                     <div
@@ -370,7 +387,13 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                       style={{ top: '60%', left: '15%', width: '40%', height: '25%' }}
                     >
                       <span className="absolute top-0 left-0 bg-orange-500 text-slate-950 text-[9px] font-bold px-1.5 py-0.2 select-none">
-                        overflow_trash: {(analysisResult.detections?.find((d: any) => d.class.startsWith('overflow'))?.confidence * 100 || 86).toFixed(0)}%
+                        overflow_trash: {(
+                          (
+                            (analysisResult.detections as Array<{ class: string; confidence: number }>)?.find(
+                              (d) => d.class.startsWith('overflow')
+                            )?.confidence ?? 0.86
+                          ) * 100
+                        ).toFixed(0)}%
                       </span>
                     </div>
                   </>
@@ -382,7 +405,13 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                     style={{ top: '20%', left: '30%', width: '40%', height: '65%' }}
                   >
                     <span className="absolute top-0 left-0 bg-emerald-500 text-slate-950 text-[9px] font-bold px-1.5 py-0.2 select-none">
-                      waste_container: {(analysisResult.detections?.find((d: any) => d.class === 'waste_container')?.confidence * 100 || 97).toFixed(0)}%
+                      waste_container: {(
+                        (
+                          (analysisResult.detections as Array<{ class: string; confidence: number }>)?.find(
+                            (d) => d.class === 'waste_container'
+                          )?.confidence ?? 0.97
+                        ) * 100
+                      ).toFixed(0)}%
                     </span>
                   </div>
                 )}
@@ -432,7 +461,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                     <select
                       value={selectedAnalysisResult}
                       onChange={(e) => {
-                        setSelectedAnalysisResult(e.target.value as any);
+                        setSelectedAnalysisResult(e.target.value as 'clean' | 'overflow');
                         setShowBoxes(false);
                         setAnalysisResult(null);
                       }}

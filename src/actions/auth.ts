@@ -34,7 +34,7 @@ export async function login(username: string, password: string) {
       success: true,
       user: { id: user.id, name: user.name, role: user.role },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Login error:', error);
     return { error: 'Произошла ошибка при авторизации' };
   }

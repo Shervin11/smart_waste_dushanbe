@@ -7,14 +7,11 @@ import {
   MessageSquare, 
   MapPin, 
   Send, 
-  Clock, 
   Check, 
   X, 
   AlertCircle, 
-  Calendar,
-  Layers,
   CheckCircle2,
-  Trash2
+  Calendar
 } from 'lucide-react';
 
 interface Feedback {
@@ -73,7 +70,7 @@ export default function FeedbackClient({
     } else if (res.feedback) {
       // Update local feedback
       setFeedbacks(prev => 
-        prev.map(f => f.id === feedbackId ? { ...f, reply: text, status: 'REPLIED' } : f)
+        prev.map((f: Feedback) => f.id === feedbackId ? { ...f, reply: text, status: 'REPLIED' } : f)
       );
       setReplyText(prev => ({ ...prev, [feedbackId]: '' }));
       setReplyLoading(prev => ({ ...prev, [feedbackId]: false }));
@@ -90,7 +87,7 @@ export default function FeedbackClient({
       setModLoading(prev => ({ ...prev, [id]: null }));
     } else {
       setSuggestions(prev => 
-        prev.map(s => s.id === id ? { ...s, status: 'APPROVED' } : s)
+        prev.map((s: SuggestedLocation) => s.id === id ? { ...s, status: 'APPROVED' } : s)
       );
       setModLoading(prev => ({ ...prev, [id]: null }));
       showNotification('success', 'Место одобрено! Новый контейнер создан и добавлен на карту.');
@@ -107,7 +104,7 @@ export default function FeedbackClient({
       setModLoading(prev => ({ ...prev, [id]: null }));
     } else {
       setSuggestions(prev => 
-        prev.map(s => s.id === id ? { ...s, status: 'REJECTED' } : s)
+        prev.map((s: SuggestedLocation) => s.id === id ? { ...s, status: 'REJECTED' } : s)
       );
       setModLoading(prev => ({ ...prev, [id]: null }));
       showNotification('success', 'Предложение отклонено.');

@@ -1,3 +1,4 @@
+import { Container } from '@prisma/client';
 import prisma from '@/lib/db';
 import ContainersClient from './ContainersClient';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -9,7 +10,7 @@ export default async function ContainersPage() {
     orderBy: { id: 'asc' },
   });
 
-  const serializeContainers = containers.map((c) => ({
+  const serializeContainers = containers.map((c: Container) => ({
     ...c,
     lastUpdated: c.lastUpdated.toISOString(),
   }));

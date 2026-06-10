@@ -6,7 +6,6 @@ import {
   Search,
   Filter,
   AlertTriangle,
-  CheckCircle2,
   Trash2,
 } from 'lucide-react';
 

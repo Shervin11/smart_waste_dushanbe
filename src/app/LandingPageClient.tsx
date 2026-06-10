@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { 
   Brain, 
@@ -10,7 +10,6 @@ import {
   Truck, 
   Cpu, 
   Globe, 
-  Play, 
   RefreshCw, 
   CheckCircle2, 
   ArrowRight, 
@@ -18,6 +17,7 @@ import {
   X, 
   Trash2, 
   Camera, 
+  Play,
   Sun, 
   Moon, 
   Layers 
@@ -38,9 +38,13 @@ export default function LandingPageClient({ currentUser }: LandingPageClientProp
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'camera' | 'routing'>('camera');
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const themeInitialized = useRef(false);
   
   // Theme Toggle Logic
   useEffect(() => {
+    if (themeInitialized.current) return;
+    themeInitialized.current = true;
+    
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const initialTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     setTheme(initialTheme);

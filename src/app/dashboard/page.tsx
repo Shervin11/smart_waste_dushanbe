@@ -1,3 +1,4 @@
+import { Container, Task, User } from '@prisma/client';
 import prisma from '@/lib/db';
 import DashboardClient from './DashboardClient';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -22,12 +23,12 @@ export default async function DashboardPage() {
     },
   });
 
-  const serializeContainers = containers.map((c) => ({
+  const serializeContainers = containers.map((c: Container & { tasks: Task[] }) => ({
     ...c,
     lastUpdated: c.lastUpdated.toISOString(),
   }));
 
-  const serializeTasks = tasks.map((t) => ({
+  const serializeTasks = tasks.map((t: Task & { container: Container; driver: User | null }) => ({
     ...t,
     createdAt: t.createdAt.toISOString(),
     completedAt: t.completedAt ? t.completedAt.toISOString() : null,

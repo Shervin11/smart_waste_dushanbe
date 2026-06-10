@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { getCurrentUser } from '@/actions/auth';
 import {
@@ -8,12 +8,9 @@ import {
   User,
   Clock,
   CheckCircle2,
-  AlertTriangle,
   Play,
   Check,
-  UserPlus,
   MapPin,
-  Calendar,
 } from 'lucide-react';
 
 interface Container {
@@ -48,9 +45,9 @@ export default function RoutesClient({
   drivers,
 }: RoutesClientProps) {
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [selectedDriverForTask, setSelectedDriverForTask] = useState<{ [key: string]: string }>({});
+  const [currentUser, setCurrentUser] = useState<{ id: string; name: string; username: string; role: string } | null>(null);
+  const [selectedDriverForTask, setSelectedDriverForTask] = useState<{ [taskId: string]: string }>({});
+  const prevInitialTasksRef = useRef(initialTasks);
 
   useEffect(() => {
     async function loadUser() {
@@ -60,9 +57,11 @@ export default function RoutesClient({
     loadUser();
   }, []);
 
-  // Update tasks locally when props change
+  const tasks = initialTasks;
+  
+  // Update ref when initialTasks changes
   useEffect(() => {
-    setTasks(initialTasks);
+    prevInitialTasksRef.current = initialTasks;
   }, [initialTasks]);
 
   const handleAssignDriver = async (taskId: string, driverId: string) => {

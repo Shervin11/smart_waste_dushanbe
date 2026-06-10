@@ -34,7 +34,7 @@ const mockSuggestedLocations = [
   { id: 'sl-1', address: 'ул. Дехоти, 23 (возле магазина)', description: 'Большое скопление строительного мусора во дворе дома. Нужен новый бак.', photo: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100%" height="100%" fill="%231e293b"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%2364748b" font-size="10">Фото свалки</text></svg>', latitude: 38.520, longitude: 68.770, status: 'PENDING', createdAt: new Date() }
 ];
 
-const filterList = (list: any[], whereArgs: any) => {
+const filterList = (list: Record<string, unknown>[], whereArgs: Record<string, unknown> | undefined) => {
   if (!whereArgs) return list;
   let result = [...list];
   const keys = Object.keys(whereArgs);
@@ -43,68 +43,69 @@ const filterList = (list: any[], whereArgs: any) => {
     if (val !== undefined) {
       if (typeof val === 'object' && val !== null) {
         // Handle nested fields if any, or standard prisma operations (like in/not/etc)
-        if ('in' in val) {
-          result = result.filter(item => val.in.includes(item[key]));
-        } else if ('not' in val) {
-          result = result.filter(item => item[key] !== val.not);
+        const operations = val as Record<string, unknown>;
+        if ('in' in operations) {
+          result = result.filter(item => (operations.in as unknown[]).includes((item as Record<string, unknown>)[key]));
+        } else if ('not' in operations) {
+          result = result.filter(item => (item as Record<string, unknown>)[key] !== operations.not);
         }
       } else {
-        result = result.filter(item => item[key] === val);
+        result = result.filter(item => (item as Record<string, unknown>)[key] === val);
       }
     }
   }
   return result;
 };
 
-const createMockPrismaClient = () => {
+const createMockPrismaClient = (): PrismaClient => {
   console.log('Using persistent in-memory mock database fallback for Vercel serverless SQLite.');
 
   return {
     user: {
-      findUnique: async ({ where }: any) => {
+      findUnique: async ({ where }: { where: Record<string, string> }) => {
         return mockUsers.find(u => u.username === where.username || u.id === where.id) || null;
       },
-      findMany: async (args?: any) => {
-        return filterList(mockUsers, args?.where);
+      findMany: async (args?: { where?: Record<string, unknown> }) => {
+        return filterList(mockUsers as Record<string, unknown>[], args?.where);
       },
-      create: async ({ data }: any) => {
+      create: async ({ data }: { data: Record<string, unknown> }) => {
         const newUser = {
           id: `user-${Date.now()}`,
-          username: data.username,
-          password: data.password,
-          name: data.name,
-          role: data.role || 'CLIENT'
+          username: data.username as string,
+          password: data.password as string,
+          name: data.name as string,
+          role: (data.role as string) || 'CLIENT'
         };
-        mockUsers.push(newUser);
+        mockUsers.push(newUser as never);
         return newUser;
       }
     },
     container: {
-      findMany: async (args?: any) => {
-        return filterList(mockContainers, args?.where);
+      findMany: async (args?: { where?: Record<string, unknown> }) => {
+        return filterList(mockContainers as Record<string, unknown>[], args?.where);
       },
-      findUnique: async ({ where }: any) => {
+      findUnique: async ({ where }: { where: Record<string, string> }) => {
         return mockContainers.find(c => c.id === where.id) || null;
       },
-      create: async ({ data }: any) => {
+      create: async ({ data }: { data: Record<string, unknown> }) => {
         const newContainer = {
-          id: data.id,
-          address: data.address,
-          latitude: data.latitude,
-          longitude: data.longitude,
-          fillLevel: data.fillLevel ?? 0,
-          overflow: data.overflow ?? false,
-          district: data.district || 'Sino',
+          id: data.id as string,
+          address: data.address as string,
+          latitude: data.latitude as number,
+          longitude: data.longitude as number,
+          fillLevel: (data.fillLevel as number) ?? 0,
+          overflow: (data.overflow as boolean) ?? false,
+          district: (data.district as string) || 'Sino',
           lastUpdated: new Date()
         };
         mockContainers.push(newContainer);
         return newContainer;
       },
-      update: async ({ where, data }: any) => {
+      update: async ({ where, data }: { where: Record<string, string>; data: Record<string, unknown> }) => {
         const c = mockContainers.find(c => c.id === where.id);
         if (c) {
-          if (data.fillLevel !== undefined) c.fillLevel = data.fillLevel;
-          if (data.overflow !== undefined) c.overflow = data.overflow;
+          if (data.fillLevel !== undefined) c.fillLevel = data.fillLevel as number;
+          if (data.overflow !== undefined) c.overflow = data.overflow as boolean;
           c.lastUpdated = new Date();
           return c;
         }
@@ -112,15 +113,15 @@ const createMockPrismaClient = () => {
       }
     },
     task: {
-      findMany: async (args?: any) => {
-        const list = filterList(mockTasks, args?.where);
-        return list.map(t => ({
+      findMany: async (args?: { where?: Record<string, unknown> }) => {
+        const list = filterList(mockTasks as Record<string, unknown>[], args?.where);
+        return list.map((t: Record<string, unknown>) => ({
           ...t,
-          container: mockContainers.find(c => c.id === t.containerId) || null,
-          driver: mockUsers.find(u => u.id === t.driverId) || null
+          container: mockContainers.find(c => c.id === (t as Record<string, unknown>).containerId) || null,
+          driver: mockUsers.find(u => u.id === (t as Record<string, unknown>).driverId) || null
         }));
       },
-      findUnique: async ({ where }: any) => {
+      findUnique: async ({ where }: { where: Record<string, string> }) => {
         const t = mockTasks.find(t => t.id === where.id);
         if (!t) return null;
         return {
@@ -129,7 +130,7 @@ const createMockPrismaClient = () => {
           driver: mockUsers.find(u => u.id === t.driverId) || null
         };
       },
-      findFirst: async ({ where }: any) => {
+      findFirst: async ({ where }: { where: Record<string, unknown> }) => {
         const active = mockTasks.find(t => t.containerId === where.containerId && ['PENDING', 'IN_PROGRESS'].includes(t.status));
         if (!active) return null;
         return {
@@ -138,30 +139,30 @@ const createMockPrismaClient = () => {
           driver: mockUsers.find(u => u.id === active.driverId) || null
         };
       },
-      create: async ({ data }: any) => {
+      create: async ({ data }: { data: Record<string, unknown> }) => {
         const newTask = {
           id: `task-${Date.now()}`,
-          containerId: data.containerId,
-          status: data.status || 'PENDING',
-          priority: data.priority || 'MEDIUM',
+          containerId: data.containerId as string,
+          status: (data.status as string) || 'PENDING',
+          priority: (data.priority as string) || 'MEDIUM',
           createdAt: new Date(),
           completedAt: null,
-          containerId_rel: data.containerId,
-          driverId: data.driverId || null
+          containerId_rel: data.containerId as string,
+          driverId: (data.driverId as string) || null
         };
-        mockTasks.push(newTask);
+        mockTasks.push(newTask as never);
         return {
           ...newTask,
           container: mockContainers.find(c => c.id === newTask.containerId) || null,
           driver: mockUsers.find(u => u.id === newTask.driverId) || null
         };
       },
-      update: async ({ where, data }: any) => {
+      update: async ({ where, data }: { where: Record<string, string>; data: Record<string, unknown> }) => {
         const t = mockTasks.find(t => t.id === where.id);
         if (t) {
-          if (data.status !== undefined) t.status = data.status;
-          if (data.driverId !== undefined) t.driverId = data.driverId;
-          if (data.completedAt !== undefined) t.completedAt = data.completedAt;
+          if (data.status !== undefined) (t as unknown as { status: string }).status = data.status as string;
+          if (data.driverId !== undefined) (t as unknown as { driverId: string }).driverId = data.driverId as string;
+          if (data.completedAt !== undefined) (t as unknown as { completedAt: Date | null }).completedAt = data.completedAt as Date | null;
           return {
             ...t,
             container: mockContainers.find(c => c.id === t.containerId)!,
@@ -172,56 +173,56 @@ const createMockPrismaClient = () => {
       }
     },
     feedback: {
-      findMany: async (args?: any) => {
-        return filterList(mockFeedbacks, args?.where).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      findMany: async (args?: { where?: Record<string, unknown> }) => {
+        return filterList(mockFeedbacks as Record<string, unknown>[], args?.where).sort((a: Record<string, unknown>, b: Record<string, unknown>) => (b.createdAt as Date) > (a.createdAt as Date) ? -1 : 1);
       },
-      create: async ({ data }: any) => {
+      create: async ({ data }: { data: Record<string, unknown> }) => {
         const newFb = {
           id: `fb-${Date.now()}`,
-          name: data.name,
-          email: data.email || null,
-          message: data.message,
+          name: data.name as string,
+          email: (data.email as string) || null,
+          message: data.message as string,
           reply: null,
           status: 'PENDING',
           createdAt: new Date()
         };
-        mockFeedbacks.push(newFb);
+        mockFeedbacks.push(newFb as never);
         return newFb;
       },
-      update: async ({ where, data }: any) => {
+      update: async ({ where, data }: { where: Record<string, string>; data: Record<string, unknown> }) => {
         const fb = mockFeedbacks.find(f => f.id === where.id);
         if (fb) {
-          if (data.reply !== undefined) fb.reply = data.reply;
-          if (data.status !== undefined) fb.status = data.status;
+          if (data.reply !== undefined) fb.reply = data.reply as string;
+          if (data.status !== undefined) fb.status = data.status as string;
           return fb;
         }
         return null;
       }
     },
     suggestedLocation: {
-      findMany: async (args?: any) => {
+      findMany: async (args?: { where?: Record<string, unknown> }) => {
         // In the database suggestedLocation might be queried, we map mock data
-        return filterList(mockSuggestedLocations, args?.where).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        return filterList(mockSuggestedLocations as Record<string, unknown>[], args?.where).sort((a: Record<string, unknown>, b: Record<string, unknown>) => (b.createdAt as Date) > (a.createdAt as Date) ? -1 : 1);
       },
-      create: async ({ data }: any) => {
+      create: async ({ data }: { data: Record<string, unknown> }) => {
         const newSl = {
           id: `sl-${Date.now()}`,
-          address: data.address,
-          description: data.description,
-          photo: data.photo,
-          latitude: data.latitude,
-          longitude: data.longitude,
+          address: data.address as string,
+          description: data.description as string,
+          photo: data.photo as string,
+          latitude: data.latitude as number,
+          longitude: data.longitude as number,
           status: 'PENDING',
           createdAt: new Date()
         };
-        mockSuggestedLocations.push(newSl);
+        mockSuggestedLocations.push(newSl as never);
         return newSl;
       },
-      update: async ({ where, data }: any) => {
+      update: async ({ where, data }: { where: Record<string, string>; data: Record<string, unknown> }) => {
         const sl = mockSuggestedLocations.find(s => s.id === where.id);
         if (sl) {
           if (data.status !== undefined) {
-            sl.status = data.status;
+            sl.status = data.status as string;
             // IF APPROVED: Automatically inject a Container
             if (data.status === 'APPROVED') {
               const uniqueId = `DUS-${Math.floor(110 + Math.random() * 880)}`;
@@ -243,7 +244,7 @@ const createMockPrismaClient = () => {
         return null;
       }
     }
-  } as any;
+  } as unknown as ReturnType<typeof prismaClientSingleton>;
 };
 
 const prismaClientSingleton = () => {
@@ -252,7 +253,9 @@ const prismaClientSingleton = () => {
     process.env.DATABASE_URL?.startsWith('postgresql://');
 
   if (isPostgres) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { PrismaPg } = require('@prisma/adapter-pg');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { Pool } = require('pg');
     const pool = new Pool({ connectionString: process.env.DATABASE_URL });
     const adapter = new PrismaPg(pool);
@@ -266,7 +269,9 @@ const prismaClientSingleton = () => {
   }
 
   // SQLite (Local Dev)
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { PrismaBetterSqlite3 } = require('@prisma/adapter-better-sqlite3');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const BetterSqlite3 = require('better-sqlite3');
   const dbPath = process.env.DATABASE_URL?.replace('file:', '') || 'prisma/dev.db';
   const db = new BetterSqlite3(dbPath);
