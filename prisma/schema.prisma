@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+  name     String
+  role     String // ADMIN, OPERATOR, DRIVER
+  tasks    Task[]
+}
+
+model Container {
+  id          String   @id
+  address     String
+  latitude    Float
+  longitude   Float
+  fillLevel   Int      @default(0) // 0 to 100
+  overflow    Boolean  @default(false)
+  district    String   // Sino, Ismoili Somoni, Shohmansur, Firdavsi
+  lastUpdated DateTime @default(now())
+  tasks       Task[]
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  containerId String
+  container   Container @relation(fields: [containerId], references: [id], onDelete: Cascade)
+  driverId    String?
+  driver      User?     @relation(fields: [driverId], references: [id])
+  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  priority    String    @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+}
