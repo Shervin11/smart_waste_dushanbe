@@ -143,7 +143,7 @@ export async function POST(request: Request) {
       fill_level: fillLevel,
       overflow,
       timestamp: new Date().toISOString(),
-      model: isMock ? 'YOLOv11-Waste-Dushanbe (Simulation)' : 'Gemini-2.5-Flash (Real AI)',
+      model: isMock ? 'Детектор (Имитация)' : 'Gemini-2.5-Flash (Real AI)',
       confidence: isMock ? 0.94 : 0.97,
       detections,
       api_mode: isMock ? 'simulation' : 'real_gemini',

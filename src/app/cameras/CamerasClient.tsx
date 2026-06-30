@@ -96,51 +96,91 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
     },
   ];
 
-  // File upload trigger
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Canvas image compression helper
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1000;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
 
-    setIsUploading(true);
-    setUploadProgress(10);
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob(
+              (blob) => {
+                if (blob) {
+                  const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+                    type: 'image/jpeg',
+                    lastModified: Date.now(),
+                  });
+                  resolve(compressedFile);
+                } else {
+                  resolve(file);
+                }
+              },
+              'image/jpeg',
+              0.7
+            );
+          } else {
+            resolve(file);
+          }
+        };
+        img.src = event.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const processFile = async (file: File) => {
     setAnalysisResult(null);
     setShowBoxes(false);
 
     const isVideo = file.type.startsWith('video/');
-    setFileType(isVideo ? 'video' : 'image');
-
-    // Simulate progress bar upload
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsUploading(false);
-          setUploadedFileUrl(URL.createObjectURL(file));
-          setRawFile(file);
-          return 100;
-        }
-        return prev + 25;
-      });
-    }, 200);
+    
+    if (isVideo) {
+      if (file.size > 4.5 * 1024 * 1024) {
+        alert('Размер видео превышает лимит 4.5 МБ для облачной обработки. Пожалуйста, загрузите меньший файл.');
+        return;
+      }
+      setFileType('video');
+      startUploadSimulation(file);
+    } else {
+      setIsUploading(true);
+      setUploadProgress(10);
+      setFileType('image');
+      try {
+        const compressedFile = await compressImage(file);
+        startUploadSimulation(compressedFile);
+      } catch (e) {
+        console.error('Compression failed, using original file', e);
+        startUploadSimulation(file);
+      }
+    }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files?.[0];
-    if (!file) return;
-
+  const startUploadSimulation = (file: File) => {
     setIsUploading(true);
     setUploadProgress(10);
-    setAnalysisResult(null);
-    setShowBoxes(false);
-
-    const isVideo = file.type.startsWith('video/');
-    setFileType(isVideo ? 'video' : 'image');
-
     const interval = setInterval(() => {
       setUploadProgress((prev) => {
         if (prev >= 100) {
@@ -153,6 +193,26 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
         return prev + 30;
       });
     }, 150);
+  };
+
+  // File upload trigger
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processFile(file);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processFile(file);
+    }
   };
 
   const handleClearFile = () => {
@@ -393,7 +453,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                     <div className="w-10 h-10 border-4 border-slate-300 dark:border-slate-700 border-t-emerald-500 rounded-full animate-spin" />
                     <div className="text-center space-y-1">
                       <p className="text-xs font-bold text-slate-600 dark:text-slate-200 uppercase tracking-widest">
-                        Анализ медиа YOLOv11...
+                        Анализ медиа...
                       </p>
                       <p className="text-[10px] text-slate-500 dark:text-slate-500 animate-pulse font-mono">
                         [СКАНИРОВАНИЕ КАДРОВ НЕЙРОСЕТЬЮ]
@@ -458,7 +518,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                   disabled={analyzing}
                   className="flex-1 flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 px-4 rounded-xl text-xs transition-all shadow-lg shadow-emerald-500/10 cursor-pointer disabled:opacity-50"
                 >
-                  <Cpu className="w-4 h-4" /> {hasApiKey ? 'Запустить ИИ-анализ (Gemini)' : 'Запустить YOLOv11 детектор (Имитация)'}
+                  <Cpu className="w-4 h-4" /> {hasApiKey ? 'Запустить ИИ-анализ (Gemini)' : 'Запустить детектор (Имитация)'}
                 </button>
               </div>
             </div>
@@ -470,7 +530,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
           <div className="bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-2xl shadow-xl flex-1 flex flex-col min-h-[300px]">
             <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
               <FileText className="w-4 h-4 text-sky-400" />
-              Лог детектора YOLOv11
+              Лог детектора
             </h4>
 
             {analysisResult ? (
