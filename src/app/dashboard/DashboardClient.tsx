@@ -96,9 +96,9 @@ export default function DashboardClient({ containers, tasks }: DashboardClientPr
       <div className="flex-1 h-96 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center animate-pulse shadow-lg shadow-emerald-500/20">
-            <Activity className="w-5 h-5 text-white" />
+            <Activity className="w-5 h-5 text-slate-900 dark:text-white" />
           </div>
-          <p className="text-sm text-slate-500 animate-pulse">Загрузка данных...</p>
+          <p className="text-sm text-slate-500 dark:text-slate-500 animate-pulse">Загрузка данных...</p>
         </div>
       </div>
     );
@@ -186,7 +186,7 @@ export default function DashboardClient({ containers, tasks }: DashboardClientPr
         {/* Bar Chart */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm flex flex-col min-h-[380px]">
           <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Заполнение по районам</h4>
-          <p className="text-xs text-slate-400 mb-6">Средний процент заполнения контейнеров</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Средний процент заполнения контейнеров</p>
           <div className="flex-1 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={districtData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
@@ -219,7 +219,7 @@ export default function DashboardClient({ containers, tasks }: DashboardClientPr
         {/* Pie Chart */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm flex flex-col min-h-[380px]">
           <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Состояние баков</h4>
-          <p className="text-xs text-slate-400 mb-4">Распределение по уровню заполнения</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Распределение по уровню заполнения</p>
           <div className="flex-1 w-full" style={{ minHeight: '200px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -267,7 +267,7 @@ export default function DashboardClient({ containers, tasks }: DashboardClientPr
         {/* Emergency alerts */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl shadow-sm flex flex-col max-h-[400px]">
           <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <AlertTriangle className={`w-4 h-4 ${activeEmergencies.length > 0 ? 'text-rose-500 animate-pulse' : 'text-slate-400'}`} />
+            <AlertTriangle className={`w-4 h-4 ${activeEmergencies.length > 0 ? 'text-rose-500 animate-pulse' : 'text-slate-500 dark:text-slate-400'}`} />
             Экстренные предупреждения
             {activeEmergencies.length > 0 && (
               <span className="ml-auto px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">
@@ -277,7 +277,7 @@ export default function DashboardClient({ containers, tasks }: DashboardClientPr
           </h4>
           <div className="flex-1 overflow-y-auto space-y-2">
             {activeEmergencies.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 text-slate-400">
+              <div className="flex flex-col items-center justify-center py-10 text-slate-500 dark:text-slate-400">
                 <CheckCircle2 className="w-10 h-10 text-emerald-500/30 mb-2" />
                 <p className="text-xs font-semibold">Все контейнеры в норме</p>
               </div>
@@ -294,7 +294,7 @@ export default function DashboardClient({ containers, tasks }: DashboardClientPr
                         {districtLabel[c.district] ?? c.district}
                       </span>
                     </div>
-                    <p className="text-slate-500 text-xs truncate flex items-center gap-1">
+                    <p className="text-slate-500 dark:text-slate-500 text-xs truncate flex items-center gap-1">
                       <MapPin className="w-3 h-3 flex-shrink-0" />
                       {c.address}
                     </p>
@@ -320,15 +320,15 @@ export default function DashboardClient({ containers, tasks }: DashboardClientPr
             ].map(({ label, value, color, bg }) => (
               <div key={label} className={`${bg} border border-slate-200/50 dark:border-slate-700/50 p-3 rounded-xl text-center`}>
                 <p className={`text-xl font-black ${color}`}>{value}</p>
-                <span className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">{label}</span>
+                <span className="text-slate-500 dark:text-slate-400 text-[10px] font-semibold uppercase tracking-wider">{label}</span>
               </div>
             ))}
           </div>
 
           <div className="flex-1 overflow-y-auto space-y-2">
-            <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Активные задачи</h5>
+            <h5 className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Активные задачи</h5>
             {tasks.filter((t) => t.status !== 'COMPLETED').length === 0 ? (
-              <p className="text-xs text-slate-400 text-center py-6">Нет активных заявок</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 text-center py-6">Нет активных заявок</p>
             ) : (
               tasks
                 .filter((t) => t.status !== 'COMPLETED')
@@ -345,7 +345,7 @@ export default function DashboardClient({ containers, tasks }: DashboardClientPr
                           {task.priority}
                         </span>
                       </div>
-                      <p className="text-slate-400 truncate max-w-[150px]">{task.container.address}</p>
+                      <p className="text-slate-500 dark:text-slate-400 truncate max-w-[150px]">{task.container.address}</p>
                     </div>
                     <span className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold ${
                       task.status === 'PENDING'

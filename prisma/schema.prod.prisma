@@ -1,0 +1,65 @@
+// Schema for Vercel/Production (PostgreSQL)
+// Used when building on Vercel.
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+  name     String
+  role     String // ADMIN, OPERATOR, DRIVER, CLIENT
+  tasks    Task[]
+}
+
+model Container {
+  id          String   @id
+  address     String
+  latitude    Float
+  longitude   Float
+  fillLevel   Int      @default(0)
+  overflow    Boolean  @default(false)
+  district    String
+  lastUpdated DateTime @default(now())
+  tasks       Task[]
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  containerId String
+  container   Container @relation(fields: [containerId], references: [id], onDelete: Cascade)
+  driverId    String?
+  driver      User?     @relation(fields: [driverId], references: [id])
+  status      String    @default("PENDING")
+  priority    String    @default("MEDIUM")
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  name      String
+  email     String?
+  message   String
+  reply     String?
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+}
+
+model SuggestedLocation {
+  id          String   @id @default(uuid())
+  address     String
+  description String
+  photo       String
+  latitude    Float
+  longitude   Float
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+}

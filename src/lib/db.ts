@@ -247,28 +247,31 @@ const createMockPrismaClient = () => {
 };
 
 const prismaClientSingleton = () => {
-  const isPostgres =
-    process.env.DATABASE_URL?.startsWith('postgres://') ||
-    process.env.DATABASE_URL?.startsWith('postgresql://');
+  const dbUrl = process.env.DATABASE_URL ?? '';
+  const isPostgres = dbUrl.startsWith('postgres://') || dbUrl.startsWith('postgresql://');
 
+  // ✅ PostgreSQL — used on Vercel / production
   if (isPostgres) {
     const { PrismaPg } = require('@prisma/adapter-pg');
     const { Pool } = require('pg');
-    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const pool = new Pool({
+      connectionString: dbUrl,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    });
     const adapter = new PrismaPg(pool);
     return new PrismaClient({ adapter });
   }
 
-  // If on Vercel and no Postgres config is found, use the in-memory mock client
-  // to prevent Serverless startup crashes with better-sqlite3 native bindings.
+  // 🟡 Vercel without Postgres configured → use mock data
   if (process.env.VERCEL === '1') {
+    console.warn('[db] Vercel env detected without PostgreSQL — using mock client.');
     return createMockPrismaClient() as unknown as PrismaClient;
   }
 
-  // SQLite (Local Dev) — use URL-based constructor matching seed.ts
+  // 💻 Local dev with SQLite
   const { PrismaBetterSqlite3 } = require('@prisma/adapter-better-sqlite3');
-  const dbUrl = process.env.DATABASE_URL || 'file:./prisma/dev.db';
-  const adapter = new PrismaBetterSqlite3({ url: dbUrl });
+  const sqliteUrl = dbUrl || 'file:./prisma/dev.db';
+  const adapter = new PrismaBetterSqlite3({ url: sqliteUrl });
   return new PrismaClient({ adapter });
 };
 

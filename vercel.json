@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cp prisma/schema.prod.prisma prisma/schema.prisma && prisma generate && next build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  }
+}

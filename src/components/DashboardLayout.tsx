@@ -108,14 +108,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   if (loading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-950 text-foreground">
+      <div className="flex h-screen w-screen items-center justify-center bg-white dark:bg-slate-950 text-foreground">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center animate-pulse shadow-xl shadow-emerald-500/30">
-              <Trash2 className="w-6 h-6 text-white" />
+              <Trash2 className="w-6 h-6 text-slate-900 dark:text-white" />
             </div>
           </div>
-          <p className="text-sm font-semibold tracking-widest text-slate-500 uppercase animate-pulse">
+          <p className="text-sm font-semibold tracking-widest text-slate-500 dark:text-slate-500 uppercase animate-pulse">
             Загрузка...
           </p>
         </div>
@@ -134,7 +134,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Logo + theme */}
       <div className="flex items-center justify-between mb-8 px-2">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/25">
+          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-slate-900 dark:text-white shadow-lg shadow-emerald-500/25">
             <Trash2 className="w-4 h-4" />
           </div>
           <div>
@@ -183,11 +183,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               href={item.href}
               className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group ${
                 isActive
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md shadow-emerald-500/20'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-900 dark:text-white shadow-md shadow-emerald-500/20'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80'
               }`}
             >
-              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-white' : ''}`} />
+              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-slate-900 dark:text-white' : ''}`} />
               <span className="flex-1">{item.name}</span>
               {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-70" />}
             </Link>
@@ -222,7 +222,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           className="fixed inset-0 z-50 md:hidden"
           onClick={() => setIsMobileOpen(false)}
         >
-          <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-white dark:bg-slate-950/70 backdrop-blur-sm" />
           <div
             className="absolute left-0 top-0 bottom-0 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-5 flex flex-col animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
@@ -254,7 +254,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/20">
-                <Trash2 className="w-3.5 h-3.5 text-white" />
+                <Trash2 className="w-3.5 h-3.5 text-slate-900 dark:text-white" />
               </div>
               <h1 className="font-black text-sm tracking-tight text-slate-900 dark:text-white uppercase">
                 Smart Waste

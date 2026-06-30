@@ -1,7 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// Schema for Vercel/Production (PostgreSQL)
+// Used when building on Vercel.
 
 generator client {
   provider   = "prisma-client-js"
@@ -26,9 +24,9 @@ model Container {
   address     String
   latitude    Float
   longitude   Float
-  fillLevel   Int      @default(0) // 0 to 100
+  fillLevel   Int      @default(0)
   overflow    Boolean  @default(false)
-  district    String   // Sino, Ismoili Somoni, Shohmansur, Firdavsi
+  district    String
   lastUpdated DateTime @default(now())
   tasks       Task[]
 }
@@ -39,8 +37,8 @@ model Task {
   container   Container @relation(fields: [containerId], references: [id], onDelete: Cascade)
   driverId    String?
   driver      User?     @relation(fields: [driverId], references: [id])
-  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
-  priority    String    @default("MEDIUM") // LOW, MEDIUM, HIGH, CRITICAL
+  status      String    @default("PENDING")
+  priority    String    @default("MEDIUM")
   createdAt   DateTime  @default(now())
   completedAt DateTime?
 }
@@ -50,8 +48,8 @@ model Feedback {
   name      String
   email     String?
   message   String
-  reply     String?  // reply from operator
-  status    String   @default("PENDING") // PENDING, REPLIED
+  reply     String?
+  status    String   @default("PENDING")
   createdAt DateTime @default(now())
 }
 
@@ -59,10 +57,9 @@ model SuggestedLocation {
   id          String   @id @default(uuid())
   address     String
   description String
-  photo       String   // base64 image data string
+  photo       String
   latitude    Float
   longitude   Float
-  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  status      String   @default("PENDING")
   createdAt   DateTime @default(now())
 }
-

@@ -36,17 +36,17 @@ export default function ContainersClient({ containers }: ContainersClientProps) 
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Title */}
       <div>
-        <h2 className="text-3xl font-extrabold text-white tracking-tight">
+        <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
           База контейнеров
         </h2>
-        <p className="text-slate-400 text-sm mt-1">
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Контроль состояния мусорных баков и мониторинг наполняемости площадок
         </p>
       </div>
 
-      <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 p-6 rounded-2xl shadow-xl overflow-hidden flex flex-col w-full">
+      <div className="bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-2xl shadow-xl overflow-hidden flex flex-col w-full">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <Trash2 className="w-5 h-5 text-emerald-400" />
             Таблица площадок
           </h3>
@@ -54,13 +54,13 @@ export default function ContainersClient({ containers }: ContainersClientProps) 
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             {/* Search */}
             <div className="relative flex-1 sm:w-48">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-500" />
               <input
                 type="text"
                 placeholder="Поиск по ID..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-2 pl-9 pr-4 text-xs placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 text-white"
+                className="w-full bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl py-2 pl-9 pr-4 text-xs placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 text-slate-900 dark:text-white"
               />
             </div>
 
@@ -68,7 +68,7 @@ export default function ContainersClient({ containers }: ContainersClientProps) 
             <select
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="bg-slate-950/50 border border-slate-800 rounded-xl py-2 px-3 text-xs focus:outline-none text-slate-300"
+              className="bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl py-2 px-3 text-xs focus:outline-none text-slate-500 dark:text-slate-300"
             >
               <option value="all">Все районы</option>
               <option value="Sino">Сино</option>
@@ -82,7 +82,7 @@ export default function ContainersClient({ containers }: ContainersClientProps) 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 text-slate-500 font-bold uppercase tracking-wider">
+              <tr className="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-500 font-bold uppercase tracking-wider">
                 <th className="pb-3.5 pl-2">ID</th>
                 <th className="pb-3.5">Адрес площадки</th>
                 <th className="pb-3.5 text-center">Заполнение</th>
@@ -90,7 +90,7 @@ export default function ContainersClient({ containers }: ContainersClientProps) 
                 <th className="pb-3.5 text-right pr-2">Обновлен</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/40">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800/40">
               {filteredContainers.map((container) => {
                 let fillBarColor = 'bg-emerald-500';
                 let statusBadge = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
@@ -98,7 +98,7 @@ export default function ContainersClient({ containers }: ContainersClientProps) 
 
                 if (container.overflow) {
                   fillBarColor = 'bg-red-700';
-                  statusBadge = 'bg-red-600 text-white font-bold border-red-600';
+                  statusBadge = 'bg-red-600 text-slate-900 dark:text-white font-bold border-red-600';
                   statusText = '⚠️ Переполнен';
                 } else if (container.fillLevel >= 80) {
                   fillBarColor = 'bg-orange-500';
@@ -116,25 +116,25 @@ export default function ContainersClient({ containers }: ContainersClientProps) 
                 );
 
                 return (
-                  <tr key={container.id} className="hover:bg-slate-900/20 group transition-colors">
-                    <td className="py-4 font-bold text-white pl-2">
+                  <tr key={container.id} className="hover:bg-slate-50 dark:bg-slate-900/20 group transition-colors">
+                    <td className="py-4 font-bold text-slate-900 dark:text-white pl-2">
                       {container.id}
                     </td>
-                    <td className="py-4 text-slate-300 max-w-[200px] truncate">
+                    <td className="py-4 text-slate-500 dark:text-slate-300 max-w-[200px] truncate">
                       <div>{container.address}</div>
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-500">
                         {container.district === 'Sino' ? 'Сино' : container.district === 'Ismoili Somoni' ? 'И. Сомони' : container.district === 'Shohmansur' ? 'Шохмансур' : 'Фирдавси'}
                       </span>
                     </td>
                     <td className="py-4">
                       <div className="flex items-center justify-center gap-3">
-                        <div className="w-16 bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+                        <div className="w-16 bg-white dark:bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-200 dark:border-slate-800">
                           <div
                             className={`h-full rounded-full ${fillBarColor}`}
                             style={{ width: `${Math.min(container.fillLevel, 100)}%` }}
                           />
                         </div>
-                        <span className="font-semibold text-slate-200 w-8 text-right">
+                        <span className="font-semibold text-slate-600 dark:text-slate-200 w-8 text-right">
                           {container.fillLevel}%
                         </span>
                       </div>
@@ -146,8 +146,8 @@ export default function ContainersClient({ containers }: ContainersClientProps) 
                         {statusText}
                       </span>
                     </td>
-                    <td className="py-4 text-right text-slate-400 pr-2 flex items-center justify-end gap-1.5 h-full">
-                      <Clock className="w-3.5 h-3.5 text-slate-500" />
+                    <td className="py-4 text-right text-slate-500 dark:text-slate-400 pr-2 flex items-center justify-end gap-1.5 h-full">
+                      <Clock className="w-3.5 h-3.5 text-slate-500 dark:text-slate-500" />
                       {timeStr}
                     </td>
                   </tr>

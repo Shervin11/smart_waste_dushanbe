@@ -204,18 +204,18 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
       {/* Title */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-3xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Видеомониторинг & Загрузка медиа
           </h2>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
             Просмотр уличных камер наблюдения и анализ пользовательских фото/видео
           </p>
         </div>
       </div>
 
       {/* CCTV Cameras Grid */}
-      <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 p-6 rounded-2xl shadow-xl">
-        <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+      <div className="bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-2xl shadow-xl">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
           <Video className="w-5 h-5 text-emerald-400" />
           Камеры наблюдения в реальном времени (CCTV)
         </h3>
@@ -227,10 +227,10 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
               <div
                 key={cam.id}
                 onClick={() => setActiveCameraId(isSelected ? null : cam.id)}
-                className={`relative aspect-video rounded-xl overflow-hidden border bg-slate-950 cursor-pointer group transition-all duration-300 ${
+                className={`relative aspect-video rounded-xl overflow-hidden border bg-white dark:bg-slate-950 cursor-pointer group transition-all duration-300 ${
                   isSelected
                     ? 'ring-2 ring-emerald-500 border-transparent md:col-span-2 md:row-span-2'
-                    : 'border-slate-800 hover:border-slate-700'
+                    : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:border-slate-700'
                 }`}
               >
                 {/* Image acting as video stream */}
@@ -244,11 +244,11 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/50 pointer-events-none" />
 
                 {/* HUD Top */}
-                <div className="absolute top-2.5 left-2.5 right-2.5 flex justify-between items-center text-[10px] font-mono text-slate-300">
-                  <span className="bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800 tracking-wider">
+                <div className="absolute top-2.5 left-2.5 right-2.5 flex justify-between items-center text-[10px] font-mono text-slate-500 dark:text-slate-300">
+                  <span className="bg-white/90 dark:bg-slate-950/80 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800 tracking-wider">
                     {cam.id}
                   </span>
-                  <div className="flex items-center gap-1.5 bg-slate-950/80 px-2 py-0.5 rounded border border-slate-800">
+                  <div className="flex items-center gap-1.5 bg-white/90 dark:bg-slate-950/80 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800">
                     <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                     <span>REC</span>
                   </div>
@@ -256,11 +256,11 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
 
                 {/* HUD Bottom */}
                 <div className="absolute bottom-2.5 left-2.5 right-2.5 flex justify-between items-end">
-                  <div className="text-[10px] font-mono text-slate-300">
-                    <p className="font-bold text-white truncate max-w-[130px] lg:max-w-none">
+                  <div className="text-[10px] font-mono text-slate-500 dark:text-slate-300">
+                    <p className="font-bold text-slate-900 dark:text-white truncate max-w-[130px] lg:max-w-none">
                       {cam.name}
                     </p>
-                    <p className="text-slate-400 mt-0.5 text-[9px]">{systemTime}</p>
+                    <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-[9px]">{systemTime}</p>
                   </div>
                   <span
                     className={`px-1.5 py-0.2 rounded text-[8px] font-extrabold border ${
@@ -274,8 +274,8 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                 </div>
 
                 {/* Zoom indicator hover icon */}
-                <div className="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                  <span className="bg-slate-950/90 border border-slate-850 px-3 py-1.5 rounded-xl text-[10px] font-bold text-slate-200 shadow-xl">
+                <div className="absolute inset-0 bg-slate-100/30 dark:bg-slate-900/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                  <span className="bg-white/95 dark:bg-slate-950/90 border border-slate-850 px-3 py-1.5 rounded-xl text-[10px] font-bold text-slate-600 dark:text-slate-200 shadow-xl">
                     {isSelected ? 'Свернуть' : 'Развернуть'}
                   </span>
                 </div>
@@ -288,12 +288,12 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
       {/* AI Upload and Analysis Center */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Upload Zone (7 cols) */}
-        <div className="lg:col-span-7 bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 p-6 rounded-2xl shadow-xl flex flex-col min-h-[450px]">
-          <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+        <div className="lg:col-span-7 bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-2xl shadow-xl flex flex-col min-h-[450px]">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
             <UploadCloud className="w-5 h-5 text-emerald-400" />
             Загрузка фото или видео с телефона / регистратора
           </h3>
-          <p className="text-xs text-slate-400 mb-6">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
             Загрузите кадр для распознавания мусорного контейнера или его уровня заполненности.
           </p>
 
@@ -303,7 +303,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
               onDragOver={handleDragOver}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className="flex-1 border-2 border-dashed border-slate-800 hover:border-emerald-500/40 bg-slate-950/30 hover:bg-emerald-500/2 rounded-2xl p-8 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all duration-300 group"
+              className="flex-1 border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-emerald-500/40 bg-slate-100/30 dark:bg-slate-950/30 hover:bg-emerald-500/2 rounded-2xl p-8 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all duration-300 group"
             >
               <input
                 type="file"
@@ -315,21 +315,21 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
 
               {isUploading ? (
                 <div className="flex flex-col items-center gap-3">
-                  <div className="w-10 h-10 rounded-full border-4 border-slate-800 border-t-emerald-500 animate-spin" />
-                  <p className="text-xs font-semibold text-slate-400">
+                  <div className="w-10 h-10 rounded-full border-4 border-slate-200 dark:border-slate-800 border-t-emerald-500 animate-spin" />
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                     Загрузка файла ({uploadProgress}%)
                   </p>
                 </div>
               ) : (
                 <>
-                  <div className="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 flex items-center justify-center shadow-lg group-hover:text-emerald-400 group-hover:border-emerald-500/20 transition-all">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center shadow-lg group-hover:text-emerald-400 group-hover:border-emerald-500/20 transition-all">
                     <UploadCloud className="w-8 h-8" />
                   </div>
                   <div className="text-center space-y-1">
-                    <p className="text-sm font-semibold text-slate-200">
+                    <p className="text-sm font-semibold text-slate-600 dark:text-slate-200">
                       Перетащите файл сюда или нажмите для выбора
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-500 dark:text-slate-500">
                       Поддерживаются изображения (JPG, PNG) и видео (MP4)
                     </p>
                   </div>
@@ -339,7 +339,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
           ) : (
             /* Uploaded Preview with Bounding Box Overlay option */
             <div className="flex-1 flex flex-col gap-5">
-              <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 flex items-center justify-center max-h-[350px] aspect-video">
+              <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex items-center justify-center max-h-[350px] aspect-video">
                 {fileType === 'image' ? (
                   <img
                     src={uploadedFileUrl}
@@ -389,13 +389,13 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
 
                 {/* Analyzing Loader overlay */}
                 {analyzing && (
-                  <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
-                    <div className="w-10 h-10 border-4 border-slate-700 border-t-emerald-500 rounded-full animate-spin" />
+                  <div className="absolute inset-0 bg-white/90 dark:bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
+                    <div className="w-10 h-10 border-4 border-slate-300 dark:border-slate-700 border-t-emerald-500 rounded-full animate-spin" />
                     <div className="text-center space-y-1">
-                      <p className="text-xs font-bold text-slate-200 uppercase tracking-widest">
+                      <p className="text-xs font-bold text-slate-600 dark:text-slate-200 uppercase tracking-widest">
                         Анализ медиа YOLOv11...
                       </p>
-                      <p className="text-[10px] text-slate-500 animate-pulse font-mono">
+                      <p className="text-[10px] text-slate-500 dark:text-slate-500 animate-pulse font-mono">
                         [СКАНИРОВАНИЕ КАДРОВ НЕЙРОСЕТЬЮ]
                       </p>
                     </div>
@@ -407,13 +407,13 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
               <div className={hasApiKey ? "w-full mb-4" : "grid grid-cols-1 md:grid-cols-2 gap-4"}>
                 {/* Select pair container */}
                 <div className="w-full">
-                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                  <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider mb-1">
                     Связать с площадкой
                   </label>
                   <select
                     value={selectedContainerId}
                     onChange={(e) => setSelectedContainerId(e.target.value)}
-                    className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-2.5 px-3 text-xs focus:outline-none text-slate-300 focus:border-emerald-500/50"
+                    className="w-full bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl py-2.5 px-3 text-xs focus:outline-none text-slate-500 dark:text-slate-300 focus:border-emerald-500/50"
                   >
                     {containers.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -426,7 +426,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                 {/* Choose simulated outcome */}
                 {!hasApiKey && (
                   <div>
-                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                    <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider mb-1">
                       Имитация результата AI
                     </label>
                     <select
@@ -436,7 +436,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                         setShowBoxes(false);
                         setAnalysisResult(null);
                       }}
-                      className="w-full bg-slate-950/50 border border-slate-800 rounded-xl py-2 px-3 text-xs focus:outline-none text-slate-300 focus:border-emerald-500/50"
+                      className="w-full bg-white/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-xl py-2 px-3 text-xs focus:outline-none text-slate-500 dark:text-slate-300 focus:border-emerald-500/50"
                     >
                       <option value="clean">Норма / Пустой (10%)</option>
                       <option value="overflow">Переполнение (99%)</option>
@@ -449,7 +449,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                 <button
                   onClick={handleClearFile}
                   disabled={analyzing}
-                  className="flex items-center justify-center gap-2 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white py-3 px-4 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-50"
+                  className="flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white py-3 px-4 rounded-xl text-xs font-semibold cursor-pointer disabled:opacity-50"
                 >
                   <X className="w-4 h-4" /> Очистить
                 </button>
@@ -467,15 +467,15 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
 
         {/* JSON Output / Activity Info (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 p-6 rounded-2xl shadow-xl flex-1 flex flex-col min-h-[300px]">
-            <h4 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <div className="bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-2xl shadow-xl flex-1 flex flex-col min-h-[300px]">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
               <FileText className="w-4 h-4 text-sky-400" />
               Лог детектора YOLOv11
             </h4>
 
             {analysisResult ? (
               <div className="space-y-4 flex-1 flex flex-col">
-                <pre className="bg-slate-950 p-4 rounded-xl border border-slate-800 text-[10px] text-sky-300 overflow-x-auto font-mono flex-1">
+                <pre className="bg-white dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 text-[10px] text-sky-300 overflow-x-auto font-mono flex-1">
                   {JSON.stringify(analysisResult, null, 2)}
                 </pre>
                 {analysisResult.overflow ? (
@@ -483,7 +483,7 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                     <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 animate-pulse" />
                     <div>
                       <p className="font-bold">Обнаружено критическое состояние!</p>
-                      <p className="text-slate-400 mt-0.5 text-[11px]">
+                      <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-[11px]">
                         Заявка на вывоз автоматически создана и добавлена в очередь маршрута.
                       </p>
                     </div>
@@ -496,10 +496,10 @@ export default function CamerasClient({ containers, hasApiKey }: CamerasClientPr
                 )}
               </div>
             ) : (
-              <div className="flex-1 flex flex-col items-center justify-center text-slate-600 text-center py-12">
-                <Cpu className="w-12 h-12 text-slate-800 mb-3" />
-                <p className="text-xs font-semibold text-slate-500">Ожидание загрузки файла...</p>
-                <p className="text-[10px] text-slate-600 mt-1 max-w-[200px]">
+              <div className="flex-1 flex flex-col items-center justify-center text-slate-500 dark:text-slate-600 text-center py-12">
+                <Cpu className="w-12 h-12 text-slate-700 dark:text-slate-800 mb-3" />
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-500">Ожидание загрузки файла...</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-600 mt-1 max-w-[200px]">
                   Загрузите снимок и запустите нейросеть для вывода структурированного JSON.
                 </p>
               </div>

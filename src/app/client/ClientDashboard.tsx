@@ -286,7 +286,7 @@ export default function ClientDashboard({
               onClick={() => setActiveTab('report')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'report' 
-                  ? 'bg-emerald-500 text-white font-black shadow-md' 
+                  ? 'bg-emerald-500 text-slate-900 dark:text-white font-black shadow-md' 
                   : 'text-slate-550 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/40'
               }`}
             >
@@ -298,7 +298,7 @@ export default function ClientDashboard({
               onClick={() => setActiveTab('message')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'message' 
-                  ? 'bg-emerald-500 text-white font-black shadow-md' 
+                  ? 'bg-emerald-500 text-slate-900 dark:text-white font-black shadow-md' 
                   : 'text-slate-550 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/40'
               }`}
             >
@@ -310,7 +310,7 @@ export default function ClientDashboard({
               onClick={() => setActiveTab('history')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === 'history' 
-                  ? 'bg-emerald-500 text-white font-black shadow-md' 
+                  ? 'bg-emerald-500 text-slate-900 dark:text-white font-black shadow-md' 
                   : 'text-slate-550 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/40'
               }`}
             >
@@ -394,7 +394,7 @@ export default function ClientDashboard({
                           <button
                             type="button"
                             onClick={() => setPhoto('')}
-                            className="absolute top-2 right-2 w-7 h-7 rounded-full bg-slate-900/80 hover:bg-rose-500 text-white flex items-center justify-center text-xs border border-transparent cursor-pointer"
+                            className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 dark:bg-slate-900/80 hover:bg-rose-500 text-slate-900 dark:text-white flex items-center justify-center text-xs border border-transparent cursor-pointer"
                           >
                             ✕
                           </button>
@@ -441,7 +441,7 @@ export default function ClientDashboard({
                   <button
                     type="submit"
                     disabled={reportLoading}
-                    className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/40 text-white font-bold py-3.5 px-4 rounded-xl text-xs transition-all shadow-sm cursor-pointer disabled:cursor-not-allowed mt-2"
+                    className="w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/40 text-slate-900 dark:text-white font-bold py-3.5 px-4 rounded-xl text-xs transition-all shadow-sm cursor-pointer disabled:cursor-not-allowed mt-2"
                   >
                     {reportLoading ? 'Отправка...' : 'Отправить на проверку'}
                     <Plus className="w-4 h-4" />
@@ -519,7 +519,7 @@ export default function ClientDashboard({
                 <button
                   type="submit"
                   disabled={msgLoading}
-                  className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/40 text-white font-bold py-3.5 px-6 rounded-xl text-xs transition-all shadow-sm cursor-pointer disabled:cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/40 text-slate-900 dark:text-white font-bold py-3.5 px-6 rounded-xl text-xs transition-all shadow-sm cursor-pointer disabled:cursor-not-allowed"
                 >
                   {msgLoading ? 'Отправка...' : 'Отправить обращение'}
                   <Send className="w-3.5 h-3.5" />
@@ -617,7 +617,7 @@ export default function ClientDashboard({
                               <p className="leading-relaxed">{fb.reply}</p>
                             ) : (
                               <p className="italic flex items-center gap-1.5 mt-0.5">
-                                <Clock className="w-3.5 h-3.5 text-slate-400 animate-pulse" />
+                                <Clock className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 animate-pulse" />
                                 Ожидает рассмотрения...
                               </p>
                             )}
