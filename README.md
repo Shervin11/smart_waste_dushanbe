@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Waste Dushanbe
 
-## Getting Started
+Платформа мониторинга мусорных контейнеров Душанбе: карта контейнеров, AI-оценка заполненности по фото, маршруты и задачи для водителей, обратная связь от жителей.
 
-First, run the development server:
+**Демо:** https://smart-waste-dushanbe.vercel.app
+
+## Возможности
+
+- **Роли:** администратор, оператор, водитель, житель — у каждого свой интерфейс.
+- **Карта** контейнеров (Leaflet) с цветом по заполненности.
+- **AI-анализ фото:** изображение сжимается в браузере, отправляется в API-роут, Gemini оценивает заполненность и переполнение. Без ключа работает демо-режим.
+- **Задачи и маршруты** для водителей: назначение и смена статуса.
+- **Дашборд** с графиками (Recharts), светлая и тёмная тема, адаптивная вёрстка.
+- **Обратная связь** и предложения новых мест для контейнеров.
+
+## Стек
+
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS · Prisma 7 · PostgreSQL (SQLite локально) · Leaflet · Recharts · Google Gemini API · Vercel
+
+## Запуск
 
 ```bash
+npm install
+cp .env.example .env   # DATABASE_URL, GEMINI_API_KEY (необязательно)
+npm run db:push
+npm run seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Открыть http://localhost:3000
