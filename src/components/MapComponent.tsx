@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { addThemedBaseLayers } from '@/lib/mapTiles';
 
 interface Container {
   id: string;
@@ -28,6 +29,17 @@ export default function MapComponent({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<{ [key: string]: L.Marker }>({});
+  const containersRef = useRef(containers);
+  const userMovedRef = useRef(false);
+
+  // Show every container until the user drags the map or picks one
+  const fitAll = () => {
+    const map = mapRef.current;
+    const list = containersRef.current;
+    if (!map || userMovedRef.current || list.length === 0) return;
+    const bounds = L.latLngBounds(list.map((c) => [c.latitude, c.longitude]));
+    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15, animate: false });
+  };
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -41,16 +53,19 @@ export default function MapComponent({
 
     mapRef.current = map;
 
-    // Add Dark Mode Tile Layer
-    L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 20,
-      }
-    ).addTo(map);
+    // Theme-aware basemap (no API key needed)
+    const stopThemeWatch = addThemedBaseLayers(map);
+
+    map.on('dragstart', () => {
+      userMovedRef.current = true;
+    });
+
+    // Leaflet measures the container once; re-measure when the layout settles
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+      fitAll();
+    });
+    resizeObserver.observe(mapContainerRef.current);
 
     // Zoom buttons styling to bottom right
     L.control
@@ -60,6 +75,8 @@ export default function MapComponent({
       .addTo(map);
 
     return () => {
+      stopThemeWatch();
+      resizeObserver.disconnect();
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
@@ -71,6 +88,8 @@ export default function MapComponent({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+
+    containersRef.current = containers;
 
     // Clear old markers
     Object.values(markersRef.current).forEach((marker) => marker.remove());
@@ -161,12 +180,15 @@ export default function MapComponent({
 
       markersRef.current[container.id] = marker;
     });
+
+    fitAll();
   }, [containers, selectedContainerId, onSelectContainer]);
 
   // Center map on selected container
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selectedContainerId) return;
+    userMovedRef.current = true;
 
     const selectedContainer = containers.find((c) => c.id === selectedContainerId);
     if (selectedContainer) {
@@ -182,5 +204,5 @@ export default function MapComponent({
     }
   }, [selectedContainerId, containers]);
 
-  return <div ref={mapContainerRef} className="w-full h-full rounded-2xl shadow-inner border border-slate-800" />;
+  return <div ref={mapContainerRef} className="w-full h-full rounded-2xl shadow-inner border border-slate-200 dark:border-slate-800" />;
 }

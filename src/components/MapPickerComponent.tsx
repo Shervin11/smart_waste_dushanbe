@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { addThemedBaseLayers } from '@/lib/mapTiles';
 
 interface MapPickerComponentProps {
   onSelectLocation: (lat: number, lng: number) => void;
@@ -30,16 +31,8 @@ export default function MapPickerComponent({
     });
     mapRef.current = map;
 
-    // Add Dark Mode Tile Layer
-    L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 20,
-      }
-    ).addTo(map);
+    // Theme-aware basemap (no API key needed)
+    const stopThemeWatch = addThemedBaseLayers(map);
 
     // Zoom buttons in bottom right
     L.control
@@ -78,6 +71,7 @@ export default function MapPickerComponent({
     });
 
     return () => {
+      stopThemeWatch();
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
